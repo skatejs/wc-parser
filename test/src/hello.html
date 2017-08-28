@@ -1,0 +1,12 @@
+<!DOCTYPE sfc>
+<import src="world.html" as="x-world"></import>
+<element props="name:string">
+  Hello,
+  <x-world>${ucfirst(name)}</x-world>!
+</element>
+<script>
+  function ucfirst(str) {
+    return str[0].toUpperCase() + str.substring(1);
+  }
+
+</script>

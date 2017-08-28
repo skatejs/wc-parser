@@ -1,0 +1,34 @@
+{
+  "name": "wc-parser",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "wc-parser": "index.js"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "camelcase": "^4.1.0",
+    "cheerio": "^1.0.0-rc.2",
+    "glob": "^7.1.2",
+    "htmlparser2": "^3.9.2",
+    "lit-html": "^0.5.0",
+    "mkdirp": "^0.5.1",
+    "outdent": "^0.3.0",
+    "preact": "^8.2.4",
+    "prettier": "^1.5.3",
+    "skatejs": "^5.0.0-alpha.16",
+    "uppercamelcase": "^3.0.0",
+    "yargs": "^8.0.2"
+  },
+  "devDependencies": {
+    "jest": "^20.0.4"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC"
+}

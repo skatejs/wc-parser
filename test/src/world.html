@@ -1,0 +1,4 @@
+<!DOCTYPE sfc>
+<element props="yell:boolean">
+  ${yell ? html`<strong><slot></slot></strong>` : html`<em><slot></slot></em>`}
+</element>

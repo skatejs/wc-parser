@@ -1,0 +1,82 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`output complex sfc 1`] = `
+Object {
+  "body": "import {
+  props,
+  withProps
+} from \\"./../../node_modules/skatejs/esnext/with-props.js\\";
+import { withRender } from \\"./../../node_modules/skatejs/esnext/with-render.js\\";
+import { html, render } from \\"./../../node_modules/lit-html/lit-html.js\\";
+function withLitHtml(Base) {
+  return class extends withRender(withProps(Base || HTMLElement)) {
+    rendererCallback(renderRoot, renderCallback) {
+      render(renderCallback(), renderRoot);
+    }
+  };
+}
+const Base = withLitHtml();
+
+export default class CustomElement extends Base {
+  renderCallback({ yell }) {
+    return html\`
+  \${yell ? html\`<strong><slot></slot></strong>\` : html\`<em><slot></slot></em>\`}
+\`;
+  }
+}
+
+CustomElement.props = { yell: props.boolean };
+",
+  "sfc": true,
+}
+`;
+
+exports[`output html 1`] = `
+Object {
+  "body": "<script type=\\"module\\">
+import XHello from \\"./hello.js\\";
+customElements.define(\\"x-hello\\", XHello);
+</script>
+<x-hello name=\\"world\\"></x-hello>",
+  "sfc": false,
+}
+`;
+
+exports[`output simple sfc 1`] = `
+Object {
+  "body": "import XWorld from \\"./world.js\\";
+customElements.define(\\"x-world\\", XWorld);
+
+function ucfirst(str) {
+  return str[0].toUpperCase() + str.substring(1);
+}
+
+import {
+  props,
+  withProps
+} from \\"./../../node_modules/skatejs/esnext/with-props.js\\";
+import { withRender } from \\"./../../node_modules/skatejs/esnext/with-render.js\\";
+import { html, render } from \\"./../../node_modules/lit-html/lit-html.js\\";
+function withLitHtml(Base) {
+  return class extends withRender(withProps(Base || HTMLElement)) {
+    rendererCallback(renderRoot, renderCallback) {
+      render(renderCallback(), renderRoot);
+    }
+  };
+}
+const Base = withLitHtml();
+
+export default class CustomElement extends Base {
+  renderCallback({ name }) {
+    return html\`
+  Hello,
+  <x-world>\${ucfirst(name)}</x-world>!
+\`;
+  }
+}
+
+CustomElement.props = { name: props.string };
+",
+  "sfc": true,
+}
+`;
