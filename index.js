@@ -38,6 +38,11 @@ function parseElement($element, dirname) {
   const className = (name && uppercamelcase(name)) || "CustomElement";
   const imports = $element.find("import");
   const scripts = $element.find("script");
+
+  // Imports and scripts should not appear in the template.
+  $element.remove(imports);
+  $element.remove(scripts);
+
   return prettier.format(`
     ${boilerplate(dirname)}
     ${imports.toArray().map(e => parseImport($(e), dirname)).join(";\n")}
