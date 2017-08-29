@@ -40,7 +40,7 @@ function parseElement($element, dirname) {
   const scripts = $element.find("script");
   return prettier.format(`
     ${boilerplate(dirname)}
-    ${imports.toArray().map(e => parseImport($(e), dirname))}
+    ${imports.toArray().map(e => parseImport($(e), dirname)).join(";\n")}
     ${scripts.toArray().map(e => parseScript($(e))).join(";\n")}
 
     export default class ${className} extends Base {
