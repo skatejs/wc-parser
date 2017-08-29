@@ -25,7 +25,7 @@ export default class XF3327e6 extends Base {
   }
 }
 
-XF3327e6.props = { yell: props.boolean };
+XF3327e6.props = { yell: props.boolean || boolean };
 
 customElements.define(\\"x-f3327e6\\", XF3327e6);
 ",
@@ -75,7 +75,7 @@ export default class X8a66b12 extends Base {
   }
 }
 
-X8a66b12.props = { name: props.string };
+X8a66b12.props = { name: props.string || string };
 
 customElements.define(\\"x-8a66b12\\", X8a66b12);
 ",
