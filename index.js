@@ -85,7 +85,7 @@ function parseScript($script, dirname) {
 
 function parseProp(prop) {
   const [name, type] = prop.split(":");
-  return `${name}${type ? `:props.${type || "{}"}` : ""}`;
+  return `${name}${type ? `: props.${type} || ${type}` : ""}`;
 }
 
 function parsePropName(prop) {
