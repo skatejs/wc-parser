@@ -2,9 +2,13 @@ const cheerio = require("cheerio");
 const outdent = require("outdent");
 const prettier = require("prettier");
 const fs = require("fs");
+const objectHash = require("object-hash");
 const path = require("path");
 const uppercamelcase = require("uppercamelcase");
 
+const importMap = {};
+const getHash = el => objectHash(el.html()).substring(0, 7);
+const getName = el => el.attr("name") || `x-${getHash(el)}`;
 const imp = (i, p, d) => `import ${i} from '${resolve(p, d)}';`;
 const boilerplate = dirname => `
   ${imp("{ props, withProps }", "skatejs/esnext/with-props", dirname)}
@@ -29,12 +33,11 @@ function resolve(modulePath, relativeTo) {
 }
 
 function parseElement($element, dirname) {
-  const name = $element.attr("name");
+  const name = getName($element);
   const props = ($element.attr("props") || "").split(" ").filter(Boolean);
   const className = (name && uppercamelcase(name)) || "CustomElement";
   const imports = $element.find("import");
   const scripts = $element.find("script");
-
   return prettier.format(`
     ${boilerplate(dirname)}
     ${imports.toArray().map(e => parseImport($(e), dirname))}
@@ -50,7 +53,7 @@ function parseElement($element, dirname) {
       ? `${className}.props = { ${props.map(parseProp).join(",")} };`
       : ""}
 
-    ${name ? `customElements.define('${name}', ${className})` : ""}
+    customElements.define('${name}', ${className});
   `);
 }
 
@@ -58,10 +61,22 @@ function parseImport($import, dirname) {
   const name = $import.attr("as");
   const src = $import.attr("src");
   const className = uppercamelcase(name || src);
-  return prettier.format(`
-    import ${className} from '${resolve(src, dirname)}';
-    ${name ? `customElements.define('${name}', ${className});` : ""}
-  `);
+
+  // Parse the import and map the alias to the acutal element name.
+  if (name) {
+    importMap[name] = getName(
+      cheerio.load(fs.readFileSync(path.join(dirname, src)))("element").eq(0)
+    );
+  }
+
+  return prettier.format(
+    `import ${className} from '${resolve(src, dirname)}';`
+  );
+}
+
+function parseElementNameFromImportSource(source) {
+  const $elements = cheerio.load(source);
+  return $elements.eq(0).attr("name");
 }
 
 function parseScript($script, dirname) {
@@ -88,6 +103,10 @@ function parseAndReplace($, dirname, using) {
   };
 }
 
+function html(ch) {
+  return ch("head").html() + ch("body").html();
+}
+
 function parse(file) {
   const dirname = path.dirname(file);
   const content = fs.readFileSync(file);
@@ -99,15 +118,22 @@ function parse(file) {
 
   if (sfc) {
     body = prettier.format(outdent`
-      ${imports.toArray().map(e => parseImport($(e), dirname))}
+      ${imports.toArray().map(e => parseImport($(e), dirname)).join(";\n")}
       ${scripts.toArray().map(e => parseScript($(e))).join(";\n")}
-      ${elements.toArray().map(e => parseElement($(e), dirname))}
+      ${elements.toArray().map(e => parseElement($(e), dirname)).join(";\n")}
     `);
   } else {
     imports.each(parseAndReplace($, dirname, parseImport));
     elements.each(parseAndReplace($, dirname, parseElement));
-    body = $("body").html();
+    body = html($);
   }
+
+  Object.keys(importMap).forEach(key => {
+    body = body.replace(
+      new RegExp(`\<([\s\/]*)${key}([\s\>]*)`, "gim"),
+      `<$1${importMap[key]}$2`
+    );
+  });
 
   return { body, sfc };
 }

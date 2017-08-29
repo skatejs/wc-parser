@@ -17,7 +17,7 @@ function withLitHtml(Base) {
 }
 const Base = withLitHtml();
 
-export default class CustomElement extends Base {
+export default class XF3327e6 extends Base {
   renderCallback({ yell }) {
     return html\`
   \${yell ? html\`<strong><slot></slot></strong>\` : html\`<em><slot></slot></em>\`}
@@ -25,7 +25,9 @@ export default class CustomElement extends Base {
   }
 }
 
-CustomElement.props = { yell: props.boolean };
+XF3327e6.props = { yell: props.boolean };
+
+customElements.define(\\"x-f3327e6\\", XF3327e6);
 ",
   "sfc": true,
 }
@@ -35,9 +37,8 @@ exports[`output html 1`] = `
 Object {
   "body": "<script type=\\"module\\">
 import XHello from \\"./hello.js\\";
-customElements.define(\\"x-hello\\", XHello);
 </script>
-<x-hello name=\\"world\\"></x-hello>",
+<x-8a66b12 name=\\"world\\"></x-8a66b12>",
   "sfc": false,
 }
 `;
@@ -45,7 +46,6 @@ customElements.define(\\"x-hello\\", XHello);
 exports[`output simple sfc 1`] = `
 Object {
   "body": "import XWorld from \\"./world.js\\";
-customElements.define(\\"x-world\\", XWorld);
 
 function ucfirst(str) {
   return str[0].toUpperCase() + str.substring(1);
@@ -66,16 +66,18 @@ function withLitHtml(Base) {
 }
 const Base = withLitHtml();
 
-export default class CustomElement extends Base {
+export default class X8a66b12 extends Base {
   renderCallback({ name }) {
     return html\`
   Hello,
-  <x-world>\${ucfirst(name)}</x-world>!
+  <x-f3327e6>\${ucfirst(name)}</x-f3327e6>!
 \`;
   }
 }
 
-CustomElement.props = { name: props.string };
+X8a66b12.props = { name: props.string };
+
+customElements.define(\\"x-8a66b12\\", X8a66b12);
 ",
   "sfc": true,
 }
